@@ -2,15 +2,14 @@
 <html>
   <head>
     <title>Contact</title>
-    <link rel="stylesheet" href="/stylesheets/bootstrap-3.3.5-dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/stylesheets/style.css">
-
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/bootstrap-3.3.5-dist/css/bootstrap.min.css">
   </head>
-  <body ng-app="contacts">
+  <body ng-app="directoryApp">
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-            <h1>Contacts</h1>
+            <h1>Directory</h1>
             <div ui-view></div>
           </div>
         </div>
@@ -68,10 +67,9 @@
       </script>
       <!-- end of /edit template -->
 
-
-      <script src="javascripts/angular/angular.min.js"></script>
-      <script src="javascripts/angular-ui-router/build/angular-ui-router.min.js"></script>
-      <script src="javascripts/angularApp.js"></script>
+      <script src="/libs/angular/angular.min.js"></script>
+      <script src="libs/angular-ui-router/build/angular-ui-router.min.js"></script>
+      <script src="app.js"></script>
 
   </body>
 </html>

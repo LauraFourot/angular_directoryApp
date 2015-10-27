@@ -2,7 +2,7 @@ var express     = require('express');
 var http        = require('http');
 var bodyParser  = require('body-parser');
 var path        = require('path');
-var ejs        = require('ejs');
+var ejs         = require('ejs');
 
 /*
  * Database
