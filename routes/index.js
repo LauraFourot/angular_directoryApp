@@ -54,7 +54,6 @@ router.put('/contacts/:contact', function (req, res, next){
 // Delete a contact
 router.delete('/contacts/:contact', function (req, res, next) {
 	var contact = req.contact;
-	console.log(contact);
 	contact.remove(function(err) {
     if (err) {
     	return res.status(400).send({message: getErrorMessage(err)});
