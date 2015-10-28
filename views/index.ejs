@@ -4,6 +4,7 @@
     <title>DirectoryApp</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/bootstrap-3.3.5-dist/css/bootstrap.min.css">
+
   </head>
   <body ng-app="directoryApp">
       <div class="container">
@@ -18,16 +19,23 @@
       <script type="text/ng-template" id="/home.html">
         <div class="col-md-6">
           <h2> All my contacts </h2>
-          <input type="search" class="form-control" ng-model="search">
+
+          <div class="col-md-12">
+            <span class="glyphicon glyphicon-search"></span>
+            <input type="search" class="form-control" ng-model="search" placeholder="Search">
+          </div>
+
+
+
           <div ng-repeat="contact in contacts | filter: search |  orderBy:'firstname':false">
             <div class="col-md-12 contact">
-              <div class="col-md-10">
+
                 <h4> <a href="#/contacts/{{contact._id}}"> {{contact.firstname}} {{contact.lastname}} </a> </h4>
               Email : {{contact.email}}
-              </div>
-              <div class="col-md-2">
-                <button class="btn btn-primary" ng-click="deleteContact(contact)">Delete</button>
-              </div>
+
+
+                <button class="btn btn-danger btn-delete " ng-click="deleteContact(contact)"><span class="glyphicon glyphicon-remove"></span></button>
+
             </div>
           </div>
         </div>
@@ -42,7 +50,7 @@
             Email :
             <input type="email" ng-model="email" class="form-control">
 
-            <button type="submit" class="btn btn-primary">Add</button>
+            <button type="submit" class="btn btn-primary btn-add">Add</button>
           </form>
         </div>
       </script>
@@ -50,8 +58,8 @@
 
 
       <script type="text/ng-template" id="/edit.html">
-        <div class="col-md-12">
-          <h2> Edit </h2>
+        <div class="col-md-6">
+          <h2> Edit the contact </h2>
           <form ng-submit="editContact()">
             First name :
             <input type="text" ng-model="contact.firstname" class="form-control" name="firstname">
@@ -60,7 +68,7 @@
             Email :
             <input type="email" ng-model="contact.email" class="form-control" name="email">
 
-            <button type="submit" class="btn btn-primary">Edit</button>
+            <button type="submit" class="btn btn-primary btn-edit">Edit</button>
           </form>
           <a href="/#/home">Back</a>
         </div>
