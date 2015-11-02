@@ -1,83 +1,162 @@
 <!DOCTYPE>
-<html>
+<html ng-app="directoryApp">
+
   <head>
+    <meta name="viewport" content="initial-scale=1" />
     <title>DirectoryApp</title>
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/bootstrap-3.3.5-dist/css/bootstrap.min.css">
-
+    <link rel="stylesheet" href="/libs/angular-material/angular-material.css"/>
   </head>
-  <body ng-app="directoryApp">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12">
-            <h1>Directory</h1>
-            <div ui-view></div>
-          </div>
-        </div>
-      </div>
 
-      <script type="text/ng-template" id="/home.html">
-        <div class="col-md-6">
+  <body layout="row" ng-controller="MainCtrl">
+    <div layout="column" class="relative" layout-fill>
+
+      <!-- Add button -->
+      <md-button class="md-fab md-fab-bottom-right" aria-label="add" ng-click="showAdd($event)">
+       <ng-md-icon icon="add"></ng-md-icon>
+     </md-button>
+
+      <!-- Header -->
+      <md-toolbar ng-show="!showSearch">
+        <div class="md-toolbar-tools">
+          <h1> Directory </h1>
+          <span flex></span>
+          <md-button aria-label="search" ng-click="showSearch = !showSearch">
+            <ng-md-icon icon="search"></ng-md-icon>
+          </md-button>
+        </div>
+      </md-toolbar>
+
+      <!-- Search toolbar -->
+      <md-toolbar ng-show="showSearch">
+        <div class="md-toolbar-tools">
+          <md-button ng-click="showSearch = !showSearch" aria-label="back">
+            <ng-md-icon icon="arrow_back"></ng-md-icon>
+          </md-button>
+          <md-input-container flex>
+            <input ng-model="search" aria-label="search">
+          </md-input-container>
+          <md-button aria-label="search">
+            <ng-md-icon icon="search"></ng-md-icon>
+          </md-button>
+        </div>
+      </md-toolbar>
+
+      <!-- Display of the view -->
+      <div ui-view></div>
+
+    </div>
+
+    <!-- home template -->
+    <script type="text/ng-template" id="/home.html">
+      <md-content layout="row" layout-align="center">
+        <div flex="80">
           <h2> All my contacts </h2>
-
-          <div class="col-md-12">
-            <span class="glyphicon glyphicon-search"></span>
-            <input type="search" class="form-control" ng-model="search" placeholder="Search">
-          </div>
-
-
-
-          <div ng-repeat="contact in contacts | filter: search |  orderBy:'firstname':false">
-            <div class="col-md-12 contact">
-
-                <h4> <a href="#/contacts/{{contact._id}}"> {{contact.firstname}} {{contact.lastname}} </a> </h4>
-              Email : {{contact.email}}
-
-
-                <button class="btn btn-danger btn-delete " ng-click="deleteContact(contact)"><span class="glyphicon glyphicon-remove"></span></button>
-
+          <md-list layout-padding>
+            <md-item ng-repeat="contact in filteredContacts = (contacts | filter: search)">
+              <div layout="row">
+                <div flex="60">
+                  <h4> {{contact.firstname}} {{contact.lastname}} </h4>
+                </div>
+                <div flex="20">
+                  <md-button aria-label="edit">
+                    <a href="#/contacts/{{contact._id}}">
+                      <ng-md-icon icon="edit"></ng-md-icon>
+                    </a>
+                  </md-button>
+                </div>
+                <div flex="20">
+                  <md-button aria-label="delete" ng-click="deleteContact(contact)">
+                    <ng-md-icon icon="delete"></ng-md-icon>
+                  </md-button>
+                </div>
+              <md-divider></md-divider>
             </div>
+            </md-item>
+          </md-list>
+        <div ng-show="!filteredContacts.length">No contact found</div>
+        </div>
+
+
+      </md-content>
+    </script>
+    <!-- end of /home template -->
+
+    <!-- add dialog template -->
+    <script type="text/ng-template" id="/add.html">
+      <md-dialog flex="50">
+        <md-content layout="row" layout-align="center">
+          <div flex="grow" layout-padding>
+            <h2> Add a new contact </h2>
+            <form name="contactForm">
+              <div layout="row">
+                <md-input-container flex="50">
+                  <label for="firstName">First name</label>
+                  <input type="text" ng-model="firstName" id="firstName">
+                </md-input-container>
+                <md-input-container flex="50">
+                  <label for="lastName">Last name</label>
+                  <input type="text" ng-model="lastName" id="lastName">
+                </md-input-container>
+              </div>
+              <md-input-container flex>
+                <label for="email">Email</label>
+                <input type="email" ng-model="email" id="email">
+              </md-input-container>
+            </form>
+            <md-button class="md-raised" ng-click="cancel()">Cancel</md-button>
+            <md-button class="md-raised" ng-click="addContact()">Add</md-button>
           </div>
-        </div>
-
-        <div class="col-md-6">
-          <h2> Add a new contact </h2>
-          <form ng-submit="addContact()">
-            First name :
-            <input type="text" ng-model="firstName" class="form-control">
-            Last name :
-            <input type="text" ng-model="lastName" class="form-control">
-            Email :
-            <input type="email" ng-model="email" class="form-control">
-
-            <button type="submit" class="btn btn-primary btn-add">Add</button>
-          </form>
-        </div>
+        </md-content>
+      </md-dialog>
       </script>
-      <!-- end of /home template -->
+      <!-- end of /add dialog template -->
 
-
+      <!-- edit template -->
       <script type="text/ng-template" id="/edit.html">
-        <div class="col-md-6">
-          <h2> Edit the contact </h2>
-          <form ng-submit="editContact()">
-            First name :
-            <input type="text" ng-model="contact.firstname" class="form-control" name="firstname">
-            Last name :
-            <input type="text" ng-model="contact.lastname" class="form-control" name="lastname">
-            Email :
-            <input type="email" ng-model="contact.email" class="form-control" name="email">
-
-            <button type="submit" class="btn btn-primary btn-edit">Edit</button>
+        <md-content layout="row" layout-align="center">
+          <div flex="50" layout-padding>
+            <h2> Edit the contact </h2>
+            <form ng-submit="editContact()">
+              <md-input-container flex>
+                <label>First name</label>
+                <input type="text" ng-model="contact.firstname" name="firstname" >
+                </md-input-container>
+              <md-input-container flex>
+                <label>Last name :</label>
+                <input type="text" ng-model="contact.lastname" name="lastname">
+              </md-input-container>
+            <md-input-container flex>
+              <label>Email :</label>
+              <input type="email" ng-model="contact.email" name="email">
+            </md-input-container>
+            <div layout="row">
+              <md-button aria-label="back">
+                <a href="/#/home">
+                  <ng-md-icon icon="arrow_back"></ng-md-icon>
+                </a>
+              </md-button>
+              <span flex></span>
+              <md-button aria-label="save" type="submit" class="md-raised btn-edit">Edit</md-button>
+            </div>
           </form>
-          <a href="/#/home">Back</a>
-        </div>
+        </md-content>
       </script>
       <!-- end of /edit template -->
 
-      <script src="/libs/angular/angular.min.js"></script>
+      <script src="libs/angular/angular.min.js"></script>
       <script src="libs/angular-ui-router/build/angular-ui-router.min.js"></script>
+      <script src="libs/angular-animate/angular-animate.min.js"></script>
+      <script src="libs/angular-aria/angular-aria.min.js"></script>
+      <script src="libs/angular-material/angular-material.min.js"></script>
+      <script src="libs/angular-material-icons/angular-material-icons.min.js"></script>
+
       <script src="app.js"></script>
+
+      <script src="services/contacts.js"></script>
+
+      <script src="controllers/MainCtrl.js"></script>
+      <script src="controllers/EditCtrl.js"></script>
 
   </body>
 </html>
